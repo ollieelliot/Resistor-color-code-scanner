@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ResistorScannerAppNew.iml" filepath="$PROJECT_DIR$/.idea/modules/ResistorScannerAppNew.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ResistorScannerAppNew.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ResistorScannerAppNew.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdk/ResistorScannerAppNew.sdk.iml" filepath="$PROJECT_DIR$/.idea/modules/sdk/ResistorScannerAppNew.sdk.iml" />
+    </modules>
+  </component>
+</project>

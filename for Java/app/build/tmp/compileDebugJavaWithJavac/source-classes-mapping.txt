@@ -1,0 +1,5 @@
+com/example/resistorscannerappnew/BuildConfig.java
+ com.example.resistorscannerappnew.BuildConfig
+com/example/resistorscannerappnew/MainActivity.java
+ com.example.resistorscannerappnew.MainActivity
+ com.example.resistorscannerappnew.MainActivity$1
