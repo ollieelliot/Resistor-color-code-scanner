@@ -1,4 +1,4 @@
 Fix: Calibrate colors
-Fix : Filter out value noise, list -> most frequent element gets printed to reduce twitching
+Fix: Filter out value noise, list -> most frequent element gets printed to reduce twitching
 
    
