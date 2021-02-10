@@ -1,7 +1,11 @@
 package com.example.resistorscannerappnew;
 
+import android.content.Context;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import android.view.SurfaceView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,32 +19,47 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.*;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
+    private ColorCodeProcessor _frameProcess;
+
     CameraBridgeViewBase cameraBridgeViewBase;
     BaseLoaderCallback baseLoaderCallback;
+    private ImageView imageFlashlight;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        flashLightOn();
 
-        cameraBridgeViewBase = (JavaCameraView)findViewById(R.id.CameraView);
+        _frameProcess = new ColorCodeProcessor();
+
+
+        cameraBridgeViewBase = (JavaCameraView) findViewById(R.id.CameraView);
         cameraBridgeViewBase.setVisibility(SurfaceView.VISIBLE);
         cameraBridgeViewBase.setCvCameraViewListener(this);
 
 
-        //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
         baseLoaderCallback = new BaseLoaderCallback(this) {
             @Override
             public void onManagerConnected(int status) {
                 super.onManagerConnected(status);
 
-                switch(status){
+                switch (status) {
 
                     case BaseLoaderCallback.SUCCESS:
                         cameraBridgeViewBase.enableView();
@@ -51,18 +70,18 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 }
 
 
+
             }
 
         };
 
+
     }
 
-    @Override
+
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
-        Mat frame = inputFrame.rgba();
-
-        return frame;
+        return _frameProcess.frameProcess(inputFrame);
     }
 
 
@@ -82,12 +101,9 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     protected void onResume() {
         super.onResume();
 
-        if (!OpenCVLoader.initDebug()){
-            Toast.makeText(getApplicationContext(),"Uh-oh, something is wrong", Toast.LENGTH_SHORT).show();
-        }
-
-        else
-        {
+        if (!OpenCVLoader.initDebug()) {
+            Toast.makeText(getApplicationContext(), "Uh-oh, something is wrong", Toast.LENGTH_SHORT).show();
+        } else {
             baseLoaderCallback.onManagerConnected(baseLoaderCallback.SUCCESS);
         }
 
@@ -96,8 +112,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     @Override
     protected void onPause() {
         super.onPause();
-        if(cameraBridgeViewBase!=null){
-
+        if (cameraBridgeViewBase != null) {
             cameraBridgeViewBase.disableView();
         }
 
@@ -107,8 +122,36 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (cameraBridgeViewBase!=null){
+        if (cameraBridgeViewBase != null) {
             cameraBridgeViewBase.disableView();
+
         }
     }
+
+
+    public void flashLightOn() {
+        CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+
+        try {
+            System.out.println("Reached flashlightOn");
+            String cameraId = cameraManager.getCameraIdList()[0];
+            cameraManager.setTorchMode(cameraId, true);
+
+
+        } catch (CameraAccessException e) {
+        }
+    }
+
+    private void flashLightOff() {
+        CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+
+        try {
+            String cameraId = cameraManager.getCameraIdList()[0];
+            cameraManager.setTorchMode(cameraId, false);
+
+        } catch (CameraAccessException e) {
+        }
+
+    }
+
 }
