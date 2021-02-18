@@ -13,7 +13,9 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.imgproc.Moments;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,10 @@ public class ColorCodeProcessor {
     };
 
     public final String color_string[] = {"Black", "Brown", "Red", "Orange", "Yellow", "Green", "Blue", "Violet", "Silver", "White"};
+
+    private HashMap<Integer, String> areas = new HashMap<Integer, String>();
+    private Map<Integer, String> sorted_values;
+    private ArrayList<String> sorted_colors = new ArrayList<>();
 
     private int x;
     private int y;
@@ -70,13 +76,20 @@ public class ColorCodeProcessor {
 
         Imgproc.rectangle(matHSV, new Point((int)(cols*0.5) - 50, (int)(rows*0.5)), new Point((int)(cols*0.5) + 50, (int)(rows*0.5)-5), new Scalar(255, 255, 255), 1);
         //Imgproc.rectangle(matHSV, new Point((int)(cols*0.5) - 50, (int)(rows*0.5)), new Point((int)(cols*0.5) + 50, (int)(rows*0.5)+10), new Scalar(255, 255, 255), 1);
+
+
+        String valueString = "Test";
+        Imgproc.putText(matHSV, valueString, new Point(10, 100), Core.FONT_HERSHEY_COMPLEX,
+                2, new Scalar(255, 0, 0, 255), 3);
+
+
         return matHSV;
     };
 
 
     public void findColor(Mat searchFrame) {
 
-        HashMap<Integer, String> areas = new HashMap<Integer, String>();
+
         System.out.println("Reached findColor");
         Rect rect = null;
 
@@ -109,16 +122,30 @@ public class ColorCodeProcessor {
                             System.out.println("h: " + h);
 
 
-
-
-
                         }
+
+                        if (sorted_colors.size() > 4){
+                            System.out.println("Reached color clear #############");
+                            sorted_colors.clear();
+                        }
+                        else{
+                            System.out.println("Reached else color string #############");
+                            sorted_colors.add(color_string[j]);
+                        }
+
                         areas.put(x, color_string[j]);
-                        Map<Integer, String> sorted_values = new TreeMap<Integer, String>(areas);
-                        System.out.println("colors found: " + sorted_values);
+
+
+
+
+
+
+
+                        sorted_values = new TreeMap<Integer, String>(areas);
+                        System.out.println("colors found: " + sorted_colors);
 
                     }
-                    catch(java.lang.ArrayIndexOutOfBoundsException e){
+                    catch(ArrayIndexOutOfBoundsException | NullPointerException e){
                         System.out.println("Exception");
                     }
 
