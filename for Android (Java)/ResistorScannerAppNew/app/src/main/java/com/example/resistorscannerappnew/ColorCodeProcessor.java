@@ -78,7 +78,7 @@ public class ColorCodeProcessor {
         //Imgproc.rectangle(matHSV, new Point((int)(cols*0.5) - 50, (int)(rows*0.5)), new Point((int)(cols*0.5) + 50, (int)(rows*0.5)+10), new Scalar(255, 255, 255), 1);
 
 
-        String valueString = "Test";
+        String valueString = sorted_colors.get(0) + ", " + sorted_colors.get(1) + ", " + sorted_colors.get(2);
         Imgproc.putText(matHSV, valueString, new Point(10, 100), Core.FONT_HERSHEY_COMPLEX,
                 2, new Scalar(255, 0, 0, 255), 3);
 
